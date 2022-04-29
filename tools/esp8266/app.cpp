@@ -175,14 +175,14 @@ void app::loop(void) {
     if(mMqttEvt) {
         mMqttEvt = false;
         mMqtt.isConnected(true);
-        char topic[30], val[10];
+        char topic[30], val[15];
         for(uint8_t id = 0; id < mSys->getNumInverters(); id++) {
             inverter_t *iv = mSys->getInverterByPos(id);
             if(NULL != iv) {
                 for(uint8_t i = 0; i < iv->listLen; i++) {
                     if(0.0f != mSys->getValue(iv, i)) {
                         snprintf(topic, 30, "%s/ch%d/%s", iv->name, iv->assign[i].ch, fields[iv->assign[i].fieldId]);
-                        snprintf(val, 10, "%.3f", mSys->getValue(iv, i));
+                        snprintf(val, 15, "%.3f", mSys->getValue(iv, i));
                         mMqtt.sendMsg(topic, val);
                         //delay(20);
                         yield();
@@ -199,7 +199,7 @@ void app::loop(void) {
                 for(uint8_t i = 0; i < iv->listLen; i++) {
                     if(0.0f != mSys->getValue(iv, i)) {
                         snprintf(topic, 30, "%s/ch%d/%s", iv->name, iv->assign[i].ch, mSys->getFieldName(iv, i));
-                        snprintf(val, 10, "%.3f %s", mSys->getValue(iv, i), mSys->getUnit(iv, i));
+                        snprintf(val, 15, "%.3f %s", mSys->getValue(iv, i), mSys->getUnit(iv, i));
                         DPRINTLN(String(topic) + ": " + String(val));
                     }
                     yield();
